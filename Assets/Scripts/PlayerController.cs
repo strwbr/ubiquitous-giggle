@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float speedX = 1f; // ск-ть по оси Х
-    [SerializeField] private float jumpForce = 300f; // сила прыжка
+    [SerializeField] private float speedX = 1f; // СЃРє-С‚СЊ РїРѕ РѕСЃРё РҐ
+    [SerializeField] private float jumpForce = 300f; // СЃРёР»Р° РїСЂС‹Р¶РєР°
 
     private Rigidbody2D _rb;
 
-    private float _horizontal = 0f; // нажатая клавиша (в какую сторону должен двигаться игрок)
+    private float _horizontal = 0f; // РЅР°Р¶Р°С‚Р°СЏ РєР»Р°РІРёС€Р° (РІ РєР°РєСѓСЋ СЃС‚РѕСЂРѕРЅСѓ РґРѕР»Р¶РµРЅ РґРІРёРіР°С‚СЊСЃСЏ РёРіСЂРѕРє)
 
     private bool _isGround = false;
     private bool _isJump = false;
     private bool _isFacingRight = true;
 
-    const float speedMultiplier = 50f; // множитель скорости
+    const float speedMultiplier = 50f; // РјРЅРѕР¶РёС‚РµР»СЊ СЃРєРѕСЂРѕСЃС‚Рё
 
     // Start is called before the first frame update
-
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -40,16 +39,16 @@ public class PlayerController : MonoBehaviour
 
         if (_isJump)
         {
-            _rb.AddForce(new Vector2(0f, jumpForce)); // придание силы для прыжка
+            _rb.AddForce(new Vector2(0f, jumpForce)); // РїСЂРёРґР°РЅРёРµ СЃРёР»С‹ РґР»СЏ РїСЂС‹Р¶РєР°
             _isGround = false;
-            _isJump = false; // игрок в воздухе НЕ прыгает
+            _isJump = false; // РёРіСЂРѕРє РІ РІРѕР·РґСѓС…Рµ РќР• РїСЂС‹РіР°РµС‚
         }
 
-        // если игрок идет вправо, но смотрит влево, то поворачиваем его спрайт (изменяем scale)
+        // РµСЃР»Рё РёРіСЂРѕРє РёРґРµС‚ РІРїСЂР°РІРѕ, РЅРѕ СЃРјРѕС‚СЂРёС‚ РІР»РµРІРѕ, С‚Рѕ РїРѕРІРѕСЂР°С‡РёРІР°РµРј РµРіРѕ СЃРїСЂР°Р№С‚ (РёР·РјРµРЅСЏРµРј scale)
         if (_horizontal > 0f && !_isFacingRight)
         {
             Flip();
-        } // если идет влево, но смотрит вправо, то тоже поворачиваем
+        } // РµСЃР»Рё РёРґРµС‚ РІР»РµРІРѕ, РЅРѕ СЃРјРѕС‚СЂРёС‚ РІРїСЂР°РІРѕ, С‚Рѕ С‚РѕР¶Рµ РїРѕРІРѕСЂР°С‡РёРІР°РµРј
         else if (_horizontal < 0f && _isFacingRight)
         {
             Flip();
@@ -64,7 +63,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    /*поворот игрока в зависимости от направления движения*/
+    /*РїРѕРІРѕСЂРѕС‚ РёРіСЂРѕРєР° РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РЅР°РїСЂР°РІР»РµРЅРёСЏ РґРІРёР¶РµРЅРёСЏ*/
     private void Flip()
     {
         _isFacingRight = !_isFacingRight;

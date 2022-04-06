@@ -1013,7 +1013,7 @@ MonoBehaviour:
   walkDistance: 4
   patrolSpeed: 1
   chasingSpeed: 5
-  timeToWait: 5
+  timeToWait: 1
   timeToChase: 3
 --- !u!61 &1622685193
 BoxCollider2D:
@@ -1028,18 +1028,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.87435436, y: 0.40301275}
+  m_Offset: {x: 0.1283884, y: 0.0458076}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 11.38, y: 18.28}
+    oldSize: {x: 4.88, y: 3.81}
     newSize: {x: 1, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 6.537409, y: 14.9160185}
+  m_Size: {x: 3.1049428, y: 3.0121055}
   m_EdgeRadius: 0
 --- !u!50 &1622685194
 Rigidbody2D:
@@ -1102,7 +1102,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: b41ab44d4518c264694e4e6fe9c652dd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3af436c189bc8ae4f97372f232263b84, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1121,8 +1121,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1622685191}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.1813, y: -0.71, z: 0}
-  m_LocalScale: {x: -0.19123468, y: 0.18924764, z: 0.18924764}
+  m_LocalPosition: {x: -6.7611, y: -1.605, z: 0}
+  m_LocalScale: {x: -0.36344153, y: 0.30565387, z: 0.18924764}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2

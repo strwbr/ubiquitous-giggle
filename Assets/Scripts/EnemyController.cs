@@ -5,31 +5,30 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     /*
-     * Враги патрулируют местность, т.е. ходят между двумя точками
-     * Патрулируют между двумя точками, ждут некоторое время в каждой из точек
-     * и возвращаются в противоположную точку.
+     * Р’СЂР°РіРё РїР°С‚СЂСѓР»РёСЂСѓСЋС‚ РјРµСЃС‚РЅРѕСЃС‚СЊ, С‚.Рµ. С…РѕРґСЏС‚ РјРµР¶РґСѓ РґРІСѓРјСЏ С‚РѕС‡РєР°РјРё
+     * РџР°С‚СЂСѓР»РёСЂСѓСЋС‚ РјРµР¶РґСѓ РґРІСѓРјСЏ С‚РѕС‡РєР°РјРё, Р¶РґСѓС‚ РЅРµРєРѕС‚РѕСЂРѕРµ РІСЂРµРјСЏ РІ РєР°Р¶РґРѕР№ РёР· С‚РѕС‡РµРє
+     * Рё РІРѕР·РІСЂР°С‰Р°СЋС‚СЃСЏ РІ РїСЂРѕС‚РёРІРѕРїРѕР»РѕР¶РЅСѓСЋ С‚РѕС‡РєСѓ.
      * 
-     * При преследовании игрока (когда тот попал в зону видимости врага) враг игнорирует две эти точки и не ждет
      */
 
-    [SerializeField] private float walkDistance = 10f; // длина патруля
-    [SerializeField] private float patrolSpeed = 1f; // ск-ть при патруле
-    [SerializeField] private float chasingSpeed = 5f; // ск-ть при преследовании
-    [SerializeField] private float timeToWait = 5f; // время "стоянки"
-    [SerializeField] private float timeToChase = 3f; // время преследования
+    [SerializeField] private float walkDistance = 10f; // РґР»РёРЅР° РїР°С‚СЂСѓР»СЏ
+    [SerializeField] private float patrolSpeed = 1f; // СЃРє-С‚СЊ РїСЂРё РїР°С‚СЂСѓР»Рµ
+    [SerializeField] private float chasingSpeed = 5f; // СЃРє-С‚СЊ РїСЂРё РїСЂРµСЃР»РµРґРѕРІР°РЅРёРё
+    [SerializeField] private float timeToWait = 5f; // РІСЂРµРјСЏ "СЃС‚РѕСЏРЅРєРё"
+    [SerializeField] private float timeToChase = 3f; // РІСЂРµРјСЏ РїСЂРµСЃР»РµРґРѕРІР°РЅРёСЏ
 
     private Rigidbody2D _rb;
-    private Vector2 _leftBoundaryPosition; // координаты левой точки патруля
-    private Vector2 _rightBoundaryPosition; // ... правой точки ...
+    private Vector2 _leftBoundaryPosition; // РєРѕРѕСЂРґРёРЅР°С‚С‹ Р»РµРІРѕР№ С‚РѕС‡РєРё РїР°С‚СЂСѓР»СЏ
+    private Vector2 _rightBoundaryPosition; // ... РїСЂР°РІРѕР№ С‚РѕС‡РєРё ...
     private Transform _playerTranform;
     private Vector2 _nextPoint;
 
     private bool _isWait = false;
     private bool _isChasingPlayer;
-    private bool _collidedWithPlayer; // ударился ли игрок о коллайдер врага  
+    private bool _collidedWithPlayer; // СѓРґР°СЂРёР»СЃСЏ Р»Рё РёРіСЂРѕРє Рѕ РєРѕР»Р»Р°Р№РґРµСЂ РІСЂР°РіР°  
     private bool _isFacingRight = true;
 
-    private float _walkSpeed; // текущяя ск-ть (либо = patrolSpeed, либо = chasingSpeed)
+    private float _walkSpeed; // С‚РµРєСѓС‰СЏСЏ СЃРє-С‚СЊ (Р»РёР±Рѕ = patrolSpeed, Р»РёР±Рѕ = chasingSpeed)
     private float _waitTime;
     private float _chaseTime;
 
@@ -38,21 +37,21 @@ public class EnemyController : MonoBehaviour
         _playerTranform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         _rb = GetComponent<Rigidbody2D>();
 
-        _leftBoundaryPosition = transform.position; // левая т. = текущее расположение
-        // т.к. right... и walk... - разные типы, то прибавляем к left... новый вектор (6,0)
+        _leftBoundaryPosition = transform.position; // Р»РµРІР°СЏ С‚. = С‚РµРєСѓС‰РµРµ СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ
+        // С‚.Рє. right... Рё walk... - СЂР°Р·РЅС‹Рµ С‚РёРїС‹, С‚Рѕ РїСЂРёР±Р°РІР»СЏРµРј Рє left... РЅРѕРІС‹Р№ РІРµРєС‚РѕСЂ (6,0)
         _rightBoundaryPosition = _leftBoundaryPosition + Vector2.right * walkDistance; // Vector2.right = new Vector2(1,0)
 
         _waitTime = timeToWait;
         _chaseTime = timeToChase;
 
-        _walkSpeed = patrolSpeed;// изначально враг в режиме патруля => он имеет ск-ть при патруле
+        _walkSpeed = patrolSpeed;// РёР·РЅР°С‡Р°Р»СЊРЅРѕ РІСЂР°Рі РІ СЂРµР¶РёРјРµ РїР°С‚СЂСѓР»СЏ => РѕРЅ РёРјРµРµС‚ СЃРє-С‚СЊ РїСЂРё РїР°С‚СЂСѓР»Рµ
     }
 
     private void Update()
     {
         if (_isWait && !_isChasingPlayer)
         {
-            // т.к. Update() вызывается каждый фрейм
+            // С‚.Рє. Update() РІС‹Р·С‹РІР°РµС‚СЃСЏ РєР°Р¶РґС‹Р№ С„СЂРµР№Рј
             StartWaitTimer();
         }
 
@@ -69,7 +68,7 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _nextPoint = Vector2.right * _walkSpeed * Time.fixedDeltaTime; // ск-ть перемещения
+        _nextPoint = Vector2.right * _walkSpeed * Time.fixedDeltaTime; // СЃРє-С‚СЊ РїРµСЂРµРјРµС‰РµРЅРёСЏ
 
         if(_isChasingPlayer && _collidedWithPlayer)
         {
@@ -81,28 +80,28 @@ public class EnemyController : MonoBehaviour
             ChasePlayer();
         }
 
-        // если враг НЕ ждет и НЕ преследует игрока, то он должен патрулировать
+        // РµСЃР»Рё РІСЂР°Рі РќР• Р¶РґРµС‚ Рё РќР• РїСЂРµСЃР»РµРґСѓРµС‚ РёРіСЂРѕРєР°, С‚Рѕ РѕРЅ РґРѕР»Р¶РµРЅ РїР°С‚СЂСѓР»РёСЂРѕРІР°С‚СЊ
         if (!_isWait && !_isChasingPlayer)
         {
             Patrol();
         }
     }
 
-    /*Режим патруля*/
+    /*Р РµР¶РёРј РїР°С‚СЂСѓР»СЏ*/
     private void Patrol()
     {
-        // первоначально враг идет вправо с положительной ск-тью
-        // если смотрит влево, то меняем направление, т.е. придаем отрицательную ск-ть
+        // РїРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕ РІСЂР°Рі РёРґРµС‚ РІРїСЂР°РІРѕ СЃ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕР№ СЃРє-С‚СЊСЋ
+        // РµСЃР»Рё СЃРјРѕС‚СЂРёС‚ РІР»РµРІРѕ, С‚Рѕ РјРµРЅСЏРµРј РЅР°РїСЂР°РІР»РµРЅРёРµ, С‚.Рµ. РїСЂРёРґР°РµРј РѕС‚СЂРёС†Р°С‚РµР»СЊРЅСѓСЋ СЃРє-С‚СЊ
         if (!_isFacingRight)
         {
             _nextPoint *= -1;
         }
 
-        // перемещение врага
+        // РїРµСЂРµРјРµС‰РµРЅРёРµ РІСЂР°РіР°
         _rb.MovePosition((Vector2)transform.position + _nextPoint);
     }
 
-    /*Режим преследования*/
+    /*Р РµР¶РёРј РїСЂРµСЃР»РµРґРѕРІР°РЅРёСЏ*/
     private void ChasePlayer()
     {
         float distance = DistanceToPlayer();
@@ -123,7 +122,7 @@ public class EnemyController : MonoBehaviour
         _rb.MovePosition((Vector2)transform.position + _nextPoint);
     }
 
-    /*Активация режима преcледования*/
+    /*РђРєС‚РёРІР°С†РёСЏ СЂРµР¶РёРјР° РїСЂРµcР»РµРґРѕРІР°РЅРёСЏ*/
     private void StartChasingPlayer()
     {
         _isChasingPlayer = true;
@@ -131,7 +130,7 @@ public class EnemyController : MonoBehaviour
         _walkSpeed = chasingSpeed;
     }
 
-    /*Режим преследования - таймер*/
+    /*Р РµР¶РёРј РїСЂРµСЃР»РµРґРѕРІР°РЅРёСЏ - С‚Р°Р№РјРµСЂ*/
     private void StartChasingTimer()
     {
         _chaseTime -= Time.deltaTime;
@@ -143,7 +142,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    /*Режим ожидания - таймер*/
+    /*Р РµР¶РёРј РѕР¶РёРґР°РЅРёСЏ - С‚Р°Р№РјРµСЂ*/
     private void StartWaitTimer()
     {
         _waitTime -= Time.deltaTime;
@@ -155,7 +154,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    /*Функция проверки, должен ли враг ждать*/
+    /*Р¤СѓРЅРєС†РёСЏ РїСЂРѕРІРµСЂРєРё, РґРѕР»Р¶РµРЅ Р»Рё РІСЂР°Рі Р¶РґР°С‚СЊ*/
     private bool ShouldWait()
     {
         bool isOutOfRightBoundary = _isFacingRight && transform.position.x >= _rightBoundaryPosition.x;
@@ -163,13 +162,14 @@ public class EnemyController : MonoBehaviour
         return isOutOfLeftBoundary || isOutOfRightBoundary;
     }
 
-    /*Расстояние между игроком и врагом*/
-    // >0 - игрок справа от врага
+    /*Р Р°СЃСЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ РёРіСЂРѕРєРѕРј Рё РІСЂР°РіРѕРј*/
+    // >0 - РёРіСЂРѕРє СЃРїСЂР°РІР° РѕС‚ РІСЂР°РіР°
     private float DistanceToPlayer()
     {
         return _playerTranform.position.x - transform.position.x;
     }
 
+    /*РЎРѕРїСЂРёРєРѕСЃРЅРѕРІРµРЅРёРµ СЃ РєРѕР»Р»Р°Р№РґРµСЂРѕРј РґСЂСѓРіРѕРіРѕ РѕР±СЉРµРєС‚Р°*/
     private void OnCollisionEnter2D(Collision2D collision)
     {
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
@@ -179,6 +179,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    /*Р’С‹С…РѕРґ РёР· РєРѕР»Р»Р°Р№РґРµСЂР° РґСЂСѓРіРѕРіРѕ РѕР±СЉРµРєС‚Р°*/
     private void OnCollisionExit2D(Collision2D collision)
     {
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
@@ -188,6 +189,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    /*РџРѕРІРѕСЂРѕС‚ РѕР±СЉРµРєС‚Р° РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РЅР°РїСЂР°РІР»РµРЅРёСЏ РґРІРёР¶РµРЅРёСЏ*/
     void Flip()
     {
         _isFacingRight = !_isFacingRight;
@@ -196,6 +198,7 @@ public class EnemyController : MonoBehaviour
         transform.localScale = playerScale;
     }
 
+    /*РљСЂР°СЃРЅР°СЏ Р»РёРЅРёСЏ - РїРѕРєР°Р·С‹РІР°РµС‚ РїСѓС‚СЊ РїР°С‚СЂСѓР»СЏ*/
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
